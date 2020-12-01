@@ -27,7 +27,8 @@ class ProductType extends AbstractType
             ])
             ->add('price', MoneyType::class, [
                 'label' => 'Prix du produit ',
-                'attr' => ['placeholder' => 'Tapez le prix du produit en €']
+                'attr' => ['placeholder' => 'Tapez le prix du produit en €'],
+                'divisor' => 100,
             ])
             ->add('picture', UrlType::class, [
                 'label' => 'Image du produit',
@@ -39,7 +40,7 @@ class ProductType extends AbstractType
                 'class' => Category::class,
                 'choice_label' => function (Category $category) {
                     return strtoupper($category->getName());
-                },
+                }
             ]);
     }
 
