@@ -7,6 +7,7 @@ use App\Entity\Category;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -19,7 +20,7 @@ class ProductType extends AbstractType
     {
         $builder->add('name', TextType::class, [
             'label' => 'Nom du produit',
-            'attr' => ['placeholder' => 'Tapez le nom du produit']
+            'attr' => ['placeholder' => 'Tapez le nom du produit'],
         ])
             ->add('shortDescription', TextareaType::class, [
                 'label' => 'Description courte',
