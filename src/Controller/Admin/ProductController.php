@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Admin;
 
 use App\Entity\Product;
 use App\Form\ProductType;
@@ -16,12 +16,27 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ProductController extends AbstractController
 {
+    protected $em;
+    protected $categoryRepository;
+    protected $productRepository;
+    protected $dispatcher;
+    protected $slugger;
+
+    public function __construct(EntityManagerInterface $em, CategoryRepository $categoryRepository, ProductRepository $productRepository, EventDispatcherInterface $dispatcher, SluggerInterface $slugger)
+    {
+        $this->em = $em;
+        $this->categoryRepository = $categoryRepository;
+        $this->productRepository = $productRepository;
+        $this->dispatcher = $dispatcher;
+        $this->slugger = $slugger;
+    }
+
     /**
      * @Route("/{slug}", name="product_category", priority=-1)
      */
-    public function category($slug, CategoryRepository $categoryRepository)
+    public function category($slug)
     {
-        $category = $categoryRepository->findOneBy([
+        $category = $this->categoryRepository->findOneBy([
             'slug' => $slug
         ]);
 
@@ -38,10 +53,10 @@ class ProductController extends AbstractController
     /**
      * @Route("/{category_slug}/{slug}", name="product_show", priority=-1)
      */
-    public function show($slug, ProductRepository $productRepository, EventDispatcherInterface $dispatcher)
+    public function show($slug)
     {
 
-        $product = $productRepository->findOneBy([
+        $product = $this->productRepository->findOneBy([
             'slug' => $slug
         ]);
 
@@ -49,7 +64,7 @@ class ProductController extends AbstractController
             throw $this->createNotFoundException("Le produit demandé n'existe pas");
         }
 
-        $dispatcher->dispatch(new ProductViewEvent($product), 'product.view');
+        $this->dispatcher->dispatch(new ProductViewEvent($product), 'product.view');
 
         return $this->render('product/show.html.twig', [
             'product' => $product,
@@ -59,16 +74,16 @@ class ProductController extends AbstractController
     /**
      * @Route("/admin/product/{id}/edit", name="product_edit")
      */
-    public function edit($id, ProductRepository $productRepository, Request $request, EntityManagerInterface $em)
+    public function edit($id, Request $request)
     {
-        $product = $productRepository->find($id);
+        $product = $this->productRepository->find($id);
 
         $form = $this->createForm(ProductType::class, $product);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            $em->flush();
+            $this->em->flush();
 
             return $this->redirectToRoute('product_show', [
                 'category_slug' => $product->getCategory()->getSlug(),
@@ -87,7 +102,7 @@ class ProductController extends AbstractController
     /**
      * @Route("/admin/product/create", name="product_create")
      */
-    public function create(Request $request, SluggerInterface $slugger, EntityManagerInterface $em)
+    public function create(Request $request)
     {
         $product = new Product();
 
@@ -96,9 +111,9 @@ class ProductController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $product->setSlug(strtolower($slugger->slug($product->getName())));
-            $em->persist($product);
-            $em->flush();
+            $product->setSlug(strtolower($this->slugger->slug($product->getName())));
+            $this->em->persist($product);
+            $this->em->flush();
 
             return $this->redirectToRoute('product_show', [
                 'category_slug' => $product->getCategory()->getSlug(),

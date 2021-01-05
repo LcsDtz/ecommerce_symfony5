@@ -9,12 +9,14 @@
 
     <form id="payment-form">
         <div id="card-element"><!--Stripe.js injects the Card Element--></div>
-        <button id="submit" class="btn btn-success">
+        <button id="submit" class="btn btn-success mt-3">
             <div class="spinner hidden" id="spinner"></div>
             <span id="button-text">Payer avec Stripe</span>
         </button>
         <p id="card-error" role="alert"></p>
     </form>
+
+    <h4>Carte de test pour commande réussite : 4242 4242 4242 4242 4 24 242 42424</h4>
 {% endblock %}
 
 {% block javascripts %}

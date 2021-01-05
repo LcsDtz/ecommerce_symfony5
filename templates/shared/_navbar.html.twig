@@ -16,17 +16,17 @@
             <li class="nav-item">
                 <a href="{{ path('cart_show') }}" class="nav-link">
                     <i class="fas fa-shopping-cart"></i>
-                     Panier ({{ cartService.total }})
+                     Panier ({{ cartService.total | amount }})
                     </a>
             </li>
             {% if app.user %}
-            <li class="nav-item"><a href="#" class="nav-link">Mes commandes</a></li>
+            <li class="nav-item"><a href="{{ path('purchase_index') }}" class="nav-link">Mes commandes</a></li>
             <li class="nav-item">
                 <a href="{{ path('security_logout') }}" class="btn btn-danger">Log out</a>
             </li>
             {% else %}
             <li class="nav-item">
-                <a href="#" class="nav-link">Inscription</a>
+                <a href="{{ path('security_registration') }}" class="nav-link">Inscription</a>
             </li>
             <li class="nav-item">
                 <a href="{{ path('security_login') }}" class="btn btn-success">Login</a>
@@ -35,3 +35,4 @@
         </ul>
     </div>
 </nav>
+<h5 class="ml-2">Bonjour ! Ce site a uniquement pour but d'être une démonstration de compétences pour renforcer mon CV. Vous trouverez le code du site sur mon <a href="https://github.com/LcsDtz">GitHub</a>, Bonne journée à vous !</h1>

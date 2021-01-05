@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Admin;
 
 use App\Entity\Category;
 use App\Form\CategoryType;
@@ -13,10 +13,21 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class CategoryController extends AbstractController
 {
+    protected $slugger;
+    protected $em;
+    protected $categoryRepository;
+
+    public function __construct(SluggerInterface $slugger, EntityManagerInterface $em, CategoryRepository $categoryRepository)
+    {
+        $this->slugger = $slugger;
+        $this->em = $em;
+        $this->categoryRepository = $categoryRepository;
+    }
+
     /**
      * @Route("/admin/category/create", name="category_create")
      */
-    public function create(Request $request, SluggerInterface $slugger, EntityManagerInterface $em)
+    public function create(Request $request)
     {
         $category = new Category();
 
@@ -25,9 +36,9 @@ class CategoryController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $category->setSlug(strtolower($slugger->slug($category->getName())));
-            $em->persist($category);
-            $em->flush();
+            $category->setSlug(strtolower($this->slugger->slug($category->getName())));
+            $this->em->persist($category);
+            $this->em->flush();
 
             return $this->redirectToRoute('homepage');
         }
@@ -42,17 +53,17 @@ class CategoryController extends AbstractController
     /**
      * @Route("/admin/category/{id}/edit", name="category_edit")
      */
-    public function edit($id, CategoryRepository $categoryRepository, SluggerInterface $slugger, Request $request, EntityManagerInterface $em)
+    public function edit($id, Request $request)
     {
-        $category = $categoryRepository->find($id);
+        $category = $this->categoryRepository->find($id);
 
         $form = $this->createForm(CategoryType::class, $category);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            $category->setSlug(strtolower($slugger->slug($category->getName())));
-            $em->flush();
+            $category->setSlug(strtolower($this->slugger->slug($category->getName())));
+            $this->em->flush();
 
             return $this->redirectToRoute('homepage');
         }

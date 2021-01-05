@@ -8,12 +8,19 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class HomeController extends AbstractController
 {
+    protected $productRepository;
+
+    public function __construct(ProductRepository $productRepository)
+    {
+        $this->productRepository = $productRepository;
+    }
+
     /**
      * @Route("/", name="homepage")
      */
-    public function homepage(ProductRepository $productRepository)
+    public function homepage()
     {
-        $products = $productRepository->findBy([], [], 3);
+        $products = $this->productRepository->findBy([], [], 3);
 
         return $this->render('home.html.twig', [
             'products' => $products

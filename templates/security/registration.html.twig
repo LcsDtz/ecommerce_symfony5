@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Inscription sur le site</h1>
+
+    {{ form_start(form_registration) }}
+
+    {{ form_errors(form_registration) }}
+
+
+    {{ form_row(form_registration.full_name) }}
+
+    {{ form_row(form_registration.email) }}
+ 
+    {{ form_row(form_registration.password) }}
+
+
+    <button type="submit" class="btn btn-primary">
+        <i class="fas fa-save"></i>
+        Inscription
+    </button>
+
+    {{ form_end(form_registration) }}
+    
+{% endblock %}

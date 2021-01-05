@@ -11,13 +11,22 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class PurchasePaymentController extends AbstractController
 {
+    protected $purchaseRepository;
+    protected $stripeService;
+
+    public function __construct(PurchaseRepository $purchaseRepository, StripeService $stripeService)
+    {
+        $this->purchaseRepository = $purchaseRepository;
+        $this->stripeService = $stripeService;
+    }
+
     /**
      * @Route("/purchase/pay/{id}", name="purchase_payment_form")
      * IsGranted("ROLE_USER")
      */
-    public function showCardForm($id, PurchaseRepository $purchaseRepository, StripeService $stripeService)
+    public function showCardForm($id)
     {
-        $purchase = $purchaseRepository->find($id);
+        $purchase = $this->purchaseRepository->find($id);
 
         if (
             !$purchase ||
@@ -27,12 +36,12 @@ class PurchasePaymentController extends AbstractController
             return $this->redirectToRoute('cart_show');
         }
 
-        $intent = $stripeService->getPaymentIntent($purchase);
+        $intent = $this->stripeService->getPaymentIntent($purchase);
 
         return $this->render('purchase/payment.html.twig', [
             'clientSecret' => $intent->client_secret,
             'purchase' => $purchase,
-            'stripePublicKey' => $stripeService->getPublicKey(),
+            'stripePublicKey' => $this->stripeService->getPublicKey(),
         ]);
     }
 }

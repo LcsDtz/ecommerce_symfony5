@@ -14,13 +14,26 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class PurchasePaymentSuccessController extends AbstractController
 {
+    protected $purchaseRepository;
+    protected $em;
+    protected $cartService;
+    protected $dispatcher;
+
+    public function __construct(PurchaseRepository $purchaseRepository, EntityManagerInterface $em, CartService $cartService, EventDispatcherInterface $dispatcher)
+    {
+        $this->purchaseRepository = $purchaseRepository;
+        $this->em = $em;
+        $this->cartService = $cartService;
+        $this->dispatcher = $dispatcher;
+    }
+
     /**
      * @Route("/purchase/success/{id}", name="purchase_payment_success")
      * @IsGranted("ROLE_USER")
      */
-    public function success($id, PurchaseRepository $purchaseRepository, EntityManagerInterface $em, CartService $cartService, EventDispatcherInterface $dispatcher)
+    public function success($id)
     {
-        $purchase = $purchaseRepository->find($id);
+        $purchase = $this->purchaseRepository->find($id);
 
         if (
             !$purchase ||
@@ -32,12 +45,12 @@ class PurchasePaymentSuccessController extends AbstractController
         }
 
         $purchase->setStatus(Purchase::STATUS_PAID);
-        $em->flush();
+        $this->em->flush();
 
-        $cartService->empty();
+        $this->cartService->empty();
 
         $purchaseEvent = new PurchaseSuccessEvent($purchase);
-        $dispatcher->dispatch($purchaseEvent, 'purchase.success');
+        $this->dispatcher->dispatch($purchaseEvent, 'purchase.success');
 
         $this->addFlash('success', "La commande a bien été payée et confirmée");
         return $this->redirectToRoute('purchase_index');
