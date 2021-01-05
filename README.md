@@ -2,4 +2,4 @@
 
 Site ecommerce réalisé avec Symfony 5 dans le but de renforcer mon CV.   
 
-Le code est expressément pas commentée.   
+Le code n'est expressément pas commenté.   
