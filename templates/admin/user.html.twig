@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Panel Admin
+{% endblock %}
+
+{% block body %}
+    <h1>Utilisateurs</h1>
+
+    <a href="{{ path("security_registration")}}" class="btn btn-sm btn-primary mt-2">
+        Créer un utilisateur <i class="fas fa-plus"></i>
+    </a>
+
+    <table class="table mt-2">
+        <thead>
+            <tr>
+                <th>Nom complet</th>
+                <th>Email</th>
+                <th>Role</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr class="table-light">
+                    <th scope="row">{{ user.fullname }}</th>
+                    <td> {{ user.email }}</td>
+                    <td>{% for role in user.roles %}
+                        {{ role }}
+                    {% endfor %}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+{% endblock %}

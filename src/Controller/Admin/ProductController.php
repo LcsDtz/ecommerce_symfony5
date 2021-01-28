@@ -73,6 +73,7 @@ class ProductController extends AbstractController
 
     /**
      * @Route("/admin/product/{id}/edit", name="product_edit")
+     * IsGranted("ROLE_ADMIN")
      */
     public function edit($id, Request $request)
     {
@@ -101,6 +102,7 @@ class ProductController extends AbstractController
 
     /**
      * @Route("/admin/product/create", name="product_create")
+     * IsGranted("ROLE_ADMIN")
      */
     public function create(Request $request)
     {
@@ -109,6 +111,7 @@ class ProductController extends AbstractController
         $form = $this->createForm(ProductType::class, $product);
 
         $form->handleRequest($request);
+
 
         if ($form->isSubmitted() && $form->isValid()) {
             $product->setSlug(strtolower($this->slugger->slug($product->getName())));

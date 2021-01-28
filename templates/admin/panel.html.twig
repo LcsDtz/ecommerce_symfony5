@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Panel Admin
+{% endblock %}
+
+{% block body %}
+    <div class="card border-dark mb-3" style="max-width: 20rem;">
+        <div class="card-header">Catégorie</div>
+        <div class="card-body">
+            <h4 class="card-title">
+                <a href="{{ path("category_panel")}}" class="btn btn-sm btn-secondary">
+                    Fiche des catégories
+                </a>
+            </h4>
+        </div>
+    </div>
+
+    <div class="card border-dark mb-3" style="max-width: 20rem;">
+        <div class="card-header">Produit</div>
+        <div class="card-body">
+            <h4 class="card-title">
+                <a href="{{ path("product_panel")}}" class="btn btn-sm btn-secondary">
+                    Fiche des produits
+                </a>
+            </h4>
+        </div>
+    </div>
+
+    <div class="card border-dark mb-3" style="max-width: 20rem;">
+        <div class="card-header">Utilisateur</div>
+        <div class="card-body">
+            <h4 class="card-title">
+                <a href="{{ path("user_panel")}}" class="btn btn-sm btn-secondary">
+                    Fiche des utilisateurs
+                </a>
+            </h4>
+        </div>
+    </div>
+{% endblock %}

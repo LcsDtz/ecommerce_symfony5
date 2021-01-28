@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Panel Admin
+{% endblock %}
+
+{% block body %}
+    <h1>Produits</h1>
+
+    <a href="{{ path("product_create")}}" class="btn btn-sm btn-primary mt-2">
+        Créer un produit <i class="fas fa-plus"></i>
+    </a>
+
+    <table class="table mt-2">
+        <thead>
+            <tr>
+                <th>Produict</th>
+                <th>Slug</th>
+                <th>Prix</th>
+                <th>Catégorie</th>
+                <th> </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+                <tr class="table-light">
+                    <th scope="row">{{ product.name }}</th>
+                    <td> {{ product.slug }}</td>
+                    <td>{{ product.price | amount }}</td>
+                    <td>{{ product.category.name }}</td>
+                    <td><a href="{{ path("product_edit", {'id': product.id}) }}">Edit</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+{% endblock %}

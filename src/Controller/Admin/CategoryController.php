@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class CategoryController extends AbstractController
@@ -26,6 +27,7 @@ class CategoryController extends AbstractController
 
     /**
      * @Route("/admin/category/create", name="category_create")
+     * IsGranted("ROLE_ADMIN")
      */
     public function create(Request $request)
     {
@@ -52,6 +54,7 @@ class CategoryController extends AbstractController
 
     /**
      * @Route("/admin/category/{id}/edit", name="category_edit")
+     * IsGranted("ROLE_ADMIN")
      */
     public function edit($id, Request $request)
     {
